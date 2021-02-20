@@ -119,6 +119,7 @@ Using Simple Python Games
 
 Current Tasks & Future Additions
 --------------------------------
+- [ ] Finish README.md with the details of all games in this project
 - [ ] Write Hangman in jupyter
 - [ ] Get Hangman running from the terminal
 - [ ] Write Blackjack in jupyter
