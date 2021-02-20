@@ -1,144 +1,138 @@
-Sample Project
+Simple Python Games
 =============
 
 **Author**: Alexander Blair | ablairdevelopment@gmail.com
 
+**Started**: 02/19/2021 (Re-Upload)
 **Last Update**: 02/19/2021
 
-Sample Project is a sample GitHub Repository. Its reason for being, intended function, and potential use goes here.
+Simple Python Games is a series of user interactive games written with Python.
+These games are meant to showcase the ability to write software that accepts and responds to user input.
+They are simple modules for the express purpose of showing an understanding of implementing user interaction into programs.
 
-Sample Project's highlighted capabilities can go in a second paragraph, if it is necessary.
 
-[GitHub Repository](https://github.com/SnSation/SampleProject "Sample Project Repository")
+[GitHub Repository](https://github.com/SnSation/SimplePythonGames "Simple Python Games Repository")
 
-[Sample Use](https://a-blair-portfolio.herokuapp.com/project/SampleProject "Sample Project on Website")
+[Sample](https://a-blair-portfolio.herokuapp.com/project/SimplePythonGames "Simple Python Games on Website")
 
 Goals & Constraints
 -------------------------
 
-Why does this project exist?
-
-What is this project supposed to do?
-
-What can't be done while creating this project?
+- Develop 3 Games with Python: Hangman, Blackjack, and a simple Dungeon Escape
+- Develop a simple Shopping Cart App
+- Applications should run in a Jupyter Notebook
+- Minimize package use
+- Stretch: All games accessible from a single file
+- Stretch: Games save progress between sessions
 
 Key Features
 ------------
 
 **Core Feature:**
-This is where the core concept of the project would be described. The Core Feature is the piece de resistance around which eeverything else is built.
+- All applications accept, utilize, and respond to user input
 
 **Secondary Feature:**
-This is where other key features would be described. There may be more than one Secondary Feature, so it is ok to have more than one. These features are more general than singular capabilites. Descriptions here should be general enough that someone unfamiliar with the project should understand what the feature is or does.
+- Applications have the option to reset without exiting
+- Returns and Outcomes change relative to User Input
+- Applications can run in the CLI
 
 Integrated Technology
 -----------------------
 **Language(s):**
 - Python
-- JavaScript
-- PostgreSQL
-- ETC
 
 **Libraries / Packages / AddOns:**
-- Software: What / Why it was used
-- Flask: Back-End API
-- React.JS: Front-End UI
-- ElephantSQL: Database
-- ETC: Other Uses
+- Jupyter Notebook
 
-[Requirements](https://github.com/SnSation/SampleProject/blob/development/requirements.txt "requirements.txt")
-
-Starting with Sample Project
+Starting with Simple Python Games
 -------------------
-### Installation
-1. Download [Sample Project](https://github.com/SnSation/SampleProject/ "Download Sample Project") | OR | Clone this [Repository](https://github.com/SnSation/SampleProject/ "Download Sample Project") 
-2. Do this step, and the following steps until Sample Project is ready to use
-3. Run `this_file.exe`, Execute `$this command`, or Open `some_file.ext` with *[Some Program](https://www.google.com/chrome/ "Software Website")*
+### Start Up
+1. Clone the [Simple Python Games](https://github.com/SnSation/SimplePythonGames/ "Download Simple Python Games") Repository
+2. From your terminal, run `games.py` with `python` OR run a specific game from the `SimplePythonGames/games` directory
+
+### Alternate Start Up
+1. Clone the [Simple Python Games](https://github.com/SnSation/SimplePythonGames/ "Download Simple Python Games") Repository
+2. From your terminal, open `jupyter notebook`
+3. Open the notebook in your browser
+4. In your browser, navigate to the `SimplePythonGames` directory, and open `SimplePythonGames.ipynb`
 
 
-
-
-Using Sample Project
+Using Simple Python Games
 ------------
-### The Simplest Case
+### Hangman
 
-**The File:**
-```
-# This is your application.py
-from sampleproject import SampleProject
+**Objective(s):**
+- Guess letters to reveal the hidden word before you are hanged!
 
-projectInstance = SampleProject()
+**Rules:**
+- 6 letters can be guess incorectly before you lose the game
+- Each correctly guessed letter will reveal all instances of it in the word
+- You can ask for a hint, but it will count against your incorrect letter count
 
-a_string = "A String"
+**Controls:**
+- `Hangman.py` accepts lowercase letters and integers
+- Use the `enter` key to make your choices
+- Letters are guesses
+- Integers are menu-related inputs
 
-a_number = 1
+### Blackjack
 
-an_object = {
-    An : Object,
-    With : Attributes
-}
+**Objective(s):**
+- Objective 1
+- Objective 2
 
-projectInstance.function(a_string, a_number, an_object)
-```
+**Rules:**
+- Rule 1
+- Rule 2
 
-**CLI:**
-```
-$ sampleproject run
-    * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
-```
+**Controls:**
+- Control 1
+- Control 2
 
-**Output:**
-```
-Sample Project Results:
-    1. Your Problem is Solved
-    2. Your Life is Easier
-    3. You Know More Things
-```
+### Dungeon Escape
 
-### A Specific Problem
-**The File:**
-```
-# This is your application.py
-from sampleproject import SampleProject
+**Objective(s):**
+- Objective 1
+- Objective 2
 
-projectInstance = SampleProject()
+**Rules:**
+- Rule 1
+- Rule 2
 
-a_string = "A String"
+**Controls:**
+- Control 1
+- Control 2
 
-a_number = 1
+### Shopping Cart
 
-an_object = {
-    An : Object,
-    With : Attributes
-}
+**Objective(s):**
+- Objective 1
+- Objective 2
 
-projectInstance.function(a_string, a_number, an_object)
-```
+**Rules:**
+- Rule 1
+- Rule 2
 
-**CLI:**
-```
-$ sampleproject run
-    * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
-```
+**Controls:**
+- Control 1
+- Control 2
 
-**Output:**
-```
-Sample Project Results:
-    1. Your Problem is Solved
-    2. Your Life is Easier
-    3. You Know More Things
-```
 Current Tasks & Future Additions
 --------------------------------
-- [x] Complete Task | Completed: 02/19/2021
-- [ ] Incomplete Task | In Development
-- [ ] Incomplete Task | Future Addition
+- [ ] Write Hangman in jupyter
+- [ ] Get Hangman running from the terminal
+- [ ] Write Blackjack in jupyter
+- [ ] Get Blackjack running from the terminal
+- [ ] Write Dungeon Escape in jupyter
+- [ ] Get Dungeon Escape running fomr the terminal
+- [ ] Create a single module that unifies all game modules
+- [ ] Write a Shopping Cart application
+- [ ] Integrate saving / loading between sessions
 
 Known Issues
 ------------
 
-1. **Name of Issue**: What happens? > How / When does it occur?
-2. **Sample Issue**: Sample Project occassionally hangs without displaying an error message when 
+- N/A
 
 Contributors & Credits
 --------------------------
@@ -147,15 +141,10 @@ Contributors & Credits
     - **Email**: ablairdevelopment@gmail.com
     - **Portfolio**: https://a-blair-portfolio.herokuapp.com/
     - **GitHub**: https://github.com/SnSation
-- **Contributors**:
-    - [Contributor Name](https://a-blair-portfolio.herokuapp.com/ "Contributor Website") | [GitHub](https://github.com/SnSation) | contributor@email.com
-- **Resources**:
-    - [Resource Name](https://www.google.com/ "Resource Website")
 
 
 Links
 -----
 
-- [Sample Project in Use](https://a-blair-portfolio.herokuapp.com/projects/SampleProject "See Sample Project in Use")
-- [Past Versions](https://a-blair-portfolio.herokuapp.com/archive/project/SampleProject "Past Versions Directory")
+- [Simple Python Games in Browser](https://a-blair-portfolio.herokuapp.com/projects/SimplePythonGames "See Simple Python Games in Use") (Incomplete)
 - [Author](https://a-blair-portfolio.herokuapp.com/ "Author Website")
