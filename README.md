@@ -19,11 +19,11 @@ Goals & Constraints
 -------------------------
 
 - Develop 3 Games with Python: Hangman, Blackjack, and a simple Dungeon Escape
-- Develop a simple Shopping Cart App
+- Applications should run in the CLI
 - Applications should run in a Jupyter Notebook
 - Minimize package use
-- Stretch: All games accessible from a single file
-- Stretch: Games save progress between sessions
+- Stretch: Games applications can run independently, or accessed from a single, unifying application
+- Stretch: Progress / Game State can be saved between sessions
 
 Key Features
 ------------
@@ -59,6 +59,20 @@ Starting with Simple Python Games
 
 Using Simple Python Games
 ------------
+### Blackjack
+
+**Objective(s):**
+- Objective 1
+- Objective 2
+
+**Rules:**
+- Rule 1
+- Rule 2
+
+**Controls:**
+- Control 1
+- Control 2
+
 ### Hangman
 
 **Objective(s):**
@@ -75,35 +89,7 @@ Using Simple Python Games
 - Letters are guesses
 - Integers are menu-related inputs
 
-### Blackjack
-
-**Objective(s):**
-- Objective 1
-- Objective 2
-
-**Rules:**
-- Rule 1
-- Rule 2
-
-**Controls:**
-- Control 1
-- Control 2
-
 ### Dungeon Escape
-
-**Objective(s):**
-- Objective 1
-- Objective 2
-
-**Rules:**
-- Rule 1
-- Rule 2
-
-**Controls:**
-- Control 1
-- Control 2
-
-### Shopping Cart
 
 **Objective(s):**
 - Objective 1
@@ -120,15 +106,19 @@ Using Simple Python Games
 Current Tasks & Future Additions
 --------------------------------
 - [ ] Finish README.md with the details of all games in this project
-- [ ] Write Hangman in jupyter
-- [ ] Get Hangman running from the terminal
-- [ ] Write Blackjack in jupyter
-- [ ] Get Blackjack running from the terminal
-- [ ] Write Dungeon Escape in jupyter
-- [ ] Get Dungeon Escape running fomr the terminal
-- [ ] Create a single module that unifies all game modules
-- [ ] Write a Shopping Cart application
-- [ ] Integrate saving / loading between sessions
+- [ ] Blackjack in Jupyter
+- [ ] Blackjack in Terminal
+- [ ] Blackjack Docs / Comments
+- [ ] Hangman in Jupyter
+- [ ] Hangman in Terminal
+- [ ] Hangman Docs / Comments
+- [ ] Dungeon Escape in Jupyter
+- [ ] Dungeon Escape in Terminal
+- [ ] Dungeon Escape Docs / Comments
+- [ ] Game State Save / Load
+- [ ] Unifying App in Jupyter
+- [ ] Unifying App in Terminal
+- [ ] Unifier Docs / Comments
 
 Known Issues
 ------------
