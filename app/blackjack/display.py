@@ -1,13 +1,13 @@
 import math
 
 class Display:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self):
+        self.name = None
         self.height = 0
         self.width = 0
 
-        self.title = ""
-        self.subtitle = ""
+        self.title = None
+        self.subtitle = None
 
         # Border_Pattern: What Series of Symbols denotes a border
         self.border_pattern = ["#"]
@@ -15,13 +15,19 @@ class Display:
         # Padding: Whitespace Characters between border and content
         self.padding = 0
 
-        # Lines hold the content to be printed
-        self.content = []
+        # Content holds data to be printed
+        # {
+        #     Section Name : Section Content (List)
+        # }
+        self.content = {}
+
+        # Order is the order in which content sections are displayed
+        self.order = []
 
         # Perspectives are a dictionary of other display objects
         # These display objects are used for sub-windows
         # {
-        #     Name : Display Object
+        #     Object.name : Object.display
         # }
         self.perspectives = {}
 
@@ -35,20 +41,20 @@ class Display:
         return f'< Display | Name: {self.name} >'
 
     # Getters and Setters
-    def set_name(self, name_str):
-        self.name = name_str
+    def set_name(self, name):
+        self.name = name
 
     def get_name(self):
         return self.name
 
-    def set_height(self, height_int):
-        self.height = height_int
+    def set_height(self, height):
+        self.height = height
     
     def get_height(self):
         return self.height
 
-    def set_width(self, width_int):
-        self.width = width_int
+    def set_width(self, width):
+        self.width = width
 
     def get_width(self):
         return self.width
@@ -71,17 +77,67 @@ class Display:
     def get_title(self):
         return self.title
 
-    def set_subtitle(self, subtitle_string):
-        self.subtitle = subtitle_string
+    def set_subtitle(self, subtitle_str):
+        self.subtitle = subtitle_str
 
     def get_subtitle(self):
         return self.subtitle
 
-    def set_content(self, content_list):
-        self.content = content_list
+    def set_content(self, content_dict):
+        self.content = content_dict
 
     def get_content(self):
         return self.content
+    
+    def set_section(self, section_name, content_list):
+        current_content = self.get_content()
+        current_content[section_name] = content_list
+        self.set_content(current_content)
+
+    def get_section(self, section_name):
+        current_content = self.get_content()
+        return current_content[section_name]
+
+    def remove_section(self, section_name):
+        current_content = self.get_content()
+        del current_content[section_name]
+
+    def add_section(self, section_name, section_content):
+        current_content = self.get_content()
+        current_content[section_name] = section_content
+        self.set_content(current_content)
+
+    def add_to_section(self, section_name, text):
+        section_content = self.get_section(section_name)
+        section_content.append(text)
+        self.set_section(section_name, section_content)
+
+    def remove_from_section(self, section_name, text):
+        section_content = self.get_section(section_name)
+        section_content.remove(text)
+        self.set_section(section_name, section_content)
+
+    def set_order(self, section_list):
+        self.content_order = section_list
+
+    def get_order(self):
+        return self.content_order
+
+    def add_to_order(self, section_name):
+        current_order = self.get_order()
+        current_order.append(section_name)
+        self.set_order(current_order)
+
+    def insert_in_order(self, position, section_name):
+        position_index = position - 1
+        current_order = self.get_order()
+        current_order.insert(position_index, section_name)
+        self.set_order(current_order)
+
+    def remove_from_order(self, section_name):
+        current_order = self.get_order()
+        current_order.remove(section_name)
+        self.set_order(current_order)
 
     def set_perspectives(self, perspectives_dict):
         self.perspectives = perspectives_dict
@@ -96,12 +152,14 @@ class Display:
         return self.perspectives[name_str]
 
     def set_current_perspective(self, name_str):
-        self.current_perspective = {
-            name_str:self.format_perspective(name_str)
-        }
+        self.current_perspective = self.get_perspective(name_str)
+        self.set_subtitle(name_str)
 
     def get_current_perspective(self):
         return self.current_perspective
+
+    def clear_perspective(self):
+        self.current_perspective = None
 
     # Format Methods
     def no_max(self, dimension_str):
@@ -110,7 +168,24 @@ class Display:
         elif dimension_str == "width":
             self.set_width(0)
 
-    def create_horizontal_border(self):
+    def format_line(self, line_str, max_width):
+        formatted_lines = []
+        new_line_count = int(math.ceil(len(line_str) / max_width))
+        
+        current_index = 0
+        last_index = max_width
+
+        while len(formatted_lines) < new_line_count:
+            if last_index >= len(line_str):
+                last_index = len(line_str)
+            new_line = line_str[current_index:last_index]
+            formatted_lines.append(new_line)
+            current_index = last_index
+            last_index = last_index + max_width
+
+        return formatted_lines
+
+    def get_horizontal_border(self):
         horizontal_border = []
         border_pattern = self.get_border_pattern()
         max_width = self.get_width()
@@ -153,78 +228,79 @@ class Display:
 
         return vertical_border
 
-    def get_horizontal_padding(self):
-        padding_string = " " * self.get_padding()
+    def get_horizontal_padding(self, line_index):
+        base_space = self.get_padding()
+        border_space = len(self.get_vertical_border(line_index))
+        padding_string = " " * (base_space + border_space - 1)
+
         return padding_string
 
     def get_vertical_padding(self, line_index):
-        max_width = self.get_width()
+        line_width = self.get_width()
         border_thickness = len(self.get_vertical_border(line_index))
-        padding_thickness = len(self.get_horizontal_padding())
+        padding_thickness = len(self.get_horizontal_padding(line_index))
 
-        space_count = self.get_width() - (border_thickness * 2) - (padding_thickness * 2)
+        space_count = line_width - (border_thickness * 2) - (padding_thickness * 2)
 
         whitespace = " " * space_count
 
         return whitespace
 
-    def format_perspective(self, perspective_name):
-        this_perspective = self.get_perspective(perspective_name)
-        formatted_content = []
-        max_width = self.get_width()
-        padding = self.get_padding()
-        max_characters = max_width - (padding * 2)
-
-        current_line = 0
-        
-
-        current_index = 0
-        last_index = current_index + max_characters
-        splitting = True
-
-        while splitting:
-            # If the last line does not meet the max width, set the last index to last character of the line
-            # and stop the loop
-            if last_index >= len(text):
-                last_index = len(text)
-                splitting = False
-
-            # Break the line in to lines the size of the max width
-            new_line = text[current_index:last_index]
-
-            # Add the new line to the lines we will display
-            formatted_lines.append(new_line)
-
-            # Update the indices from which to create new lines
-            current_index = last_index + 1
-            last_index = current_index + max_characters
-
-
-        return formatted_lines
-
     # Data Manipulation Functions
-    def update_perspective(self, name, display_object):
-        self.perspectives[name] = display_object
-
-    def update_display(self):
-        pass
-    
-    # Getting Display Data
-    def get_display(self):
-        pass
+    def update_perspective(self, obj):
+        self.set_perspective(obj.get_name(), obj.get_display())
+        self.set_current_perspective(obj.get_name())
 
     # The Actual Print Function
     def show(self):
-        current_line = 0
-        window_dimensions = [self.get_width(), self.get_height()]
-        content_start = self.get_padding() + 1
-        content_end = self.get_height() - self.get_padding() - 1
+        max_width = self.get_width()
+        max_height =self.get_height()
 
-        while current_line <= self.get_height():
-            current_line += 1
-            if (current_line == 1) or (current_line == self.get_height()):
-                print(self.get_horizontal_border())
+        horizontal_border = self.get_horizontal_border()
+        border_thickness = len(horizontal_border)
+        padding = self.get_padding()
+
+        window_line = 0
+        vertical_line = 0
+        content_line = 0
+
+        content_start = border_thickness + padding
+        content_end = max_height - (content_start * 2)
+        content_width = max_width - (content_start * 2)
+        
+
+        content = self.get_content()
+        order = self.get_order()
+
+        formatted_lines = []
+        
+        if self.get_title() != None:
+            formatted_lines.append(self.get_title())
+        if self.get_subtitle() != None:
+            formatted_lines.append(self.get_subtitle())
+        for section in order:
+            for line in content[section]:
+                formatted_content = formatted_content + self.format_line(line, content_width)
+
+        center = None
+
+        while window_line <= max_height:
+            if window_line <= border_thickness:
+                print(horizontal_border[window_line])
+            elif window_line >= (max_height - border_thickness):
+                print(horizontal_border[(max_height - window_line)])
             else:
-                vertical_borders = self.get_vertical_border(current_line)
-            elif (current_line < content_start) or (current_line > content_end):
-                print("\n")
+                left = self.get_vertical_border(vertical_line)
+                right = left[::-1]
+                line_padding = self.get_horizontal_padding(vertical_line)
+                if (window_line < content_start) or (window_line > content_end):
+                    center = self.get_vertical_padding(vertical_line)
+                else:
+                    if content_line >= len(formatted_content):
+                        center = self.get_vertical_padding(vertical_line)
+                    else:
+                        center = formatted_content[content_line]
+                        content_line += 1
+                print(f'{left}{line_padding}{center}{line_padding}{right}')
+                vertical_line += 1
+            window_line += 1

@@ -4,52 +4,107 @@ from .card import Card
 class Deck:
     def __init__(self):
         self.name = "Deck"
+        self.suits = []
+        self.faces = []
         self.cards = []
-        self.decks = 1
-        self.suits = ["Spades", "Diamonds", "Hearts", "Clubs"]
-        self.faces = [2, 3, 4, 5, 6, 7 , 8, 9, 10, "J", "Q", "K", "A"]
         
     def __repr__(self):
         return f'< Deck | Cards: {len(self.cards)} >'
-        
-    def set_cards(self, cards):
-        self.cards = cards
-        
-    def get_cards(self):
-        return self.cards
+
+    # Getters and Setters
+    def set_name(self, name):
+        self.name = name
     
-    def set_decks(self, deck_count):
-        self.decks = deck_count
+    def get_name(self):
+        return self.name
         
-    def get_decks(self):
-        return self.decks
-    
-    def set_suits(self, suits):
-        self.suits = suits
+    def set_suits(self, suit_list):
+        self.suits = suit_list
         
     def get_suits(self):
         return self.suits
-    
-    def set_faces(self, faces):
-        self.faces = faces
+
+    def add_suit(self, suit_name):
+        current_suits = self.get_suits()
+        current_suits.append(suit_name)
+        self.set_suits(current_suits)
+
+    def remove_suit(self, suit_name):
+        current_suits = self.get_suits()
+        current_suits.remove(suit_name)
+        self.set_suits(current_suits)
+
+    def set_faces(self, face_list):
+        self.faces = face_list
         
-    def get_faces(self, faces):
+    def get_faces(self):
         return self.faces
+
+    def add_face(self, face_name):
+        current_faces = self.get_faces()
+        current_faces.append(face_name)
+        self.set_faces(current_faces)
+
+    def remove_face(self, face_name):
+        current_faces = self.get_faces()
+        current_faces.remove(face_name)
+        self.set_faces(current_faces)
+
+    def set_cards(self, card_list):
+        self.cards = card_list
+        
+    def get_cards(self):
+        return self.cards
+
+    def add_card(self, card_obj):
+        current_cards = self.get_cards()
+        current_cards.append(card_obj)
+        self.set_cards(current_cards)
+
+    def remove_card(self, card_name, amount = 1):
+        current_cards = self.get_cards()
+        cards_removed = 0
+        current_index = 0
+        while cards_removed < amount:
+            current_card = current_cards[current_index]
+            if current_card.name == card_name:
+                current_cards.remove(current_card)
+                cards_removed += 1
+            if current_index == (len(current_cards) - 1):
+                break
+        
+        self.set_cards(current_cards)
+
+    # Deck Initialization
+    def set_deck(self, deck_count=1):
+        current_suits = self.get_suits()
+        current_faces = self.get_faces()
+
+        decks_built = 0
+        cards_built = 0
+        while decks_built < deck_count:
+            for suit in current_suits:
+                for face in current_faces:
+                    new_card = Card()
+                    new_card.set_suit(suit)
+                    new_card.set_face(face)
+                    new_card.set_name(f'{str(face).upper}_of_{str(suit).upper}')
+                    new_card.valuate()
+                    self.add_card(new_card)
+                    cards_built += 1
+                    # print(f'{cards_built} Cards Created')
+            decks_built += 1
+            
+
+    # Deck Action Methods
+    def take_cards(self, amount=1):
+        current_cards = self.get_cards()
+        cards_taken = []
+        while len(cards_taken) < amount:
+            cards_taken.append(current_cards.pop())
+
+        self.set_cards(current_cards)
+
+        return cards_taken
+
     
-    def shuffle_cards(self):
-        new_cards = []
-        for card in self.cards:
-            card_index = random.randint(0, (len(self.cards)-1))
-            new_cards.append(self.cards.pop(card_index))
-        self.cards = new_cards
-    
-    def reset_cards(self):
-        self.cards = []
-        for i in range(self.decks):
-            for suit in self.suits:
-                for face in self.faces:
-                    new_card = Card(suit, face)
-                    self.cards.append(new_card)
-                    
-    def deal_card(self):
-        return self.cards.pop()

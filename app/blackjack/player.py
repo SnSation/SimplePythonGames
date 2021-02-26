@@ -210,8 +210,9 @@ class Player:
         
     def split_hand(self, hand_number=1):
         if self.hands[hand_number]["cards"][0].get_face() == self.hands[hand_number]["cards"][1].get_face():
-            self.set_hand[len(self.hands)+1, [self.hands[hand_number]["cards"].pop()], self.hands[hand_number]["bet"], 0]
-            self.set_hand_total(hand_number)
+            # self.set_hand[len(self.hands)+1, [self.hands[hand_number]["cards"].pop()], self.hands[hand_number]["bet"], 0]
+            # self.set_hand_total(hand_number)
+            pass
     
     # Turn Methods
     def get_input(self, action_type):
@@ -232,7 +233,7 @@ class Player:
 
         if player_action == "q":
 #             Remove Player from the Game
-            self.leave_game()
+            pass
         elif player_action == "m":
 #             Open Player Menu
             self.display.open_menu()
@@ -255,17 +256,3 @@ class Player:
     
         self.display.update("Player", self)
                 
-    def play_turn(self, deck):
-        if is_playing == 1:
-            currently_playing = True
-            current_hand = 0
-            while currently_playing:
-                if current_hand >= len(self.hands):
-                    currently_playing = False
-                    break
-                else:
-                    current_hand += 1
-                    self.play_hand(deck, current_hand)
-                
-        self.display.update()
-        return self.hands
