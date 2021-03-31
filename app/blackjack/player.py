@@ -1,258 +1,298 @@
+from .hand import Hand
+from .display import Display
+
 class Player:
-    def __init__(self, name, display):
-        self.name = name
-        self.is_playing = 1
-    
-#         Hands: Playable Hands
-#         {
-#             Hand Number : {
-#                 "cards" : List of Cards in Hand,
-#                 "total" : Total Value of Cards in Hand,
-#                 "bet" : Funds bet on Hand,
-#                 "state": 1 = Played, 0 = Unplayed,
-#                 "natural": 1 = Natural Blackjack
-#             }
-#         }
-        self.hands = {
-            1: {
-                "cards": [],
-                "total":0,
-                "bet": 0,
-                "state":0,
-                "natural":0
-            }
-        }
-        
-#         Funds: Amount Available for Bet Method
-        self.funds = 0
-        
-#         Actions: Player Actions
-#         { Action Type : 
-#             [
-#                 Input: Action Description
-#             ]
-#         }
-        self.actions = {
-            "game": [
-                ("q", "Leave the Game"),
-                ("m", "Menu"),
-            ],
-            "hand": [
-                ("h", "Hit"),
-                ("s", "Stand"),
-                ("t", "Split Hand"),
-                ("a", "Switch Ace Value")
-            ]
-        }
-        
-#         Display: Information From Display Object
-        self.display = display
+    def __init__(self):
+        self.name = None
+
+        # Bankroll: Amount available for Betting
+        self.bankroll = None
+
+        # Hands: List of Hand Objects
+        self.hands = []
+
+        # Display: The Display Object to be used as a Perspective in the Game Display
+        self.display = None
         
     def __repr__(self):
         return f'< Player | Name: {self.name} >'
-    
-#     Name Methods
+
+    # Getters and Setters    
     def set_name(self, name):
         self.name = name
         
     def get_name(self):
         return self.name
     
-    # Hand Methods
-    def set_hands(self, hands):
-        self.hands = hands
-        
+    def set_bankroll(self, amount):
+        self.bankroll = amount
+
+    def get_bankroll(self):
+        return self.bankroll
+
+    def set_hands(self, hands_list):
+        self.hands = hands_list
+
     def get_hands(self):
         return self.hands
-    
-    def set_hand(self, hand_number=1, cards=[], bet=0, state=0):
-        self.hands[hand_number] = {
-            "cards":cards,
-            "total":sum(card.get_value() for card in cards),
-            "bet":bet,
-            "state":state,
-            "natural":0
-        }
-        # Check for Bust
-        if self.hands[hand_number]['total'] > 21:
-            self.hands[hand_number]["state"] = 1
-        # Check for Natural Blackjack
-        if (len(self.hands[hand_number]["cards"]) == 2) and self.hands[hand_number]["total"] == 21:
-            self.hands[hand_number]["natural"] = 1
-        
-    def get_hand(self, hand_number=1):
-        return self.hands[hand_number]
-        
-    def set_hand_cards(self, cards=[], hand_number=1):
-        self.hands[hand_number]["cards"] = cards
-        
-    def get_hand_cards(self, hand_number=1):
-        return self.hands[hand_number]["cards"]
-    
-    def set_hand_total(self, hand_number=1):
-        self.hands[hand_number]["total"] = sum(card.get_value() for card in self.hands[hand_number]["cards"])
-        
-    def get_hand_total(self, hand_number=1):
-        return self.hands[hand_number]["total"]
-    
-    def set_hand_state(self, state, hand_number=1):
-        self.hands[hand_number]["state"] = state
-        
-    def get_hand_state(self, hand_number=1):
-        return self.hands[hand_number]["state"]
-    
-    def add_hand_card(self, card, hand_number=1):
-        self.hands[hand_number]["cards"].append(card)
-        self.set_hand_total(hand_number)
-        
-    def check_hand(self, hand_number=1):
-        self.set_hand_total(hand_number)
-        if self.hands[hand_number]["total"] >= 21:
-            self.hands[hand_number]["state"] = 1
-            return self.hands[hand_number]["state"]
-        return self.hands[hand_number]["state"]        
-        
-    def reset_hands(self):
-        empty_hand = {
-            "cards":[],
-            "total":0,
-            "bet":0,
-            "state":0,
-            "natural":0
-        }
-        self.set_hands({1:empty_hand})
-    
-    # Funds Methods
-    def set_funds(self, amount):
-        self.funds = amount
-        
-    def get_funds(self):
-        return self.funds
-    
-    def add_funds(self, amount):
-        self.funds += amount
-        
-    def remove_funds(self, amount):
-        self.funds -= amount    
-    
-    # Turn Methods
-    def set_turn(self, turn):
-        self.turn = turn
-        
-    def get_turn(self, turn):
-        return self.turn
-    
-    def start_turn(self, deck):
-        self.set_turn(1)
-        
-    def end_turn(self):
-        self.set_turn(0)
-        
-    # Action Methods
-    def set_actions(self, actions):
-        self.actions = actions
-    
-    def get_actions(self):
-        return self.actions
-    
-    def add_action(self, action_type, user_input, action_description):
-        new_action = (user_input, action_description)
-        if self.actions[action_type]:
-            self.actions[action_type].append(new_action)
-        else:
-            self.actions[action_type] = [new_action]
-        
-    def get_action(self, action_type, identifier):
-        for k,v in self.actions[action_type].items():
-            if k == identifier:
-                return v
-            elif v == identifier:
-                return v
-            else:
-                return None
-        
-    # Turn Action Methods    
-    def bet(self, amount, hand_number=1):
-        if (self.funds - amount) > 0:
-            self.funds -= amount
-            self.hands[hand_number]["bet"] = amount
-        else:
-            current_funds = self.funds
-            self.funds = 0
-            self.hands[hand_number]["bet"] = current_funds
-        
-    def hit(self, deck, hand_number=1):
-        self.add_hand_card(deck.deal_card(), hand_number)
-        self.set_hand_total(hand_number)
-        
-    def stand(self, hand_number=1):
-        self.set_hand_total(hand_number)
-        self.set_hand_state(1, hand_number)
-    
-    def switch_ace(self, hand_number=1):
-        for card in self.hands[hand_number]["cards"]:
-            if card.get_face() == "A":
-                
-                input_query = {
-                    "prompt": f"Switch Value of the Ace of {card.get_suit()}?",
-                    "options":["yes = 'y'", "no = 'n'"]
-                }
-                self.display.set_input_query(input_query)
-                switch_card = self.display.get_user_input()
-                
-                if switch_card.lower() == "y":    
-                    if card.get_value() == 11:
-                        card.set_value(1)
-                        self.set_hand_total(hand_number)
-                    else:
-                        card.set_value(11)
-                        self.set_hand_total(hand_number)
-        
-    def split_hand(self, hand_number=1):
-        if self.hands[hand_number]["cards"][0].get_face() == self.hands[hand_number]["cards"][1].get_face():
-            # self.set_hand[len(self.hands)+1, [self.hands[hand_number]["cards"].pop()], self.hands[hand_number]["bet"], 0]
-            # self.set_hand_total(hand_number)
-            pass
-    
-    # Turn Methods
-    def get_input(self, action_type):
-        self.display.clear_input()
-        
-        for k,v in self.actions["game"]:
-            self.display.add_input_option(f'Input "{k}" --- {v}')
-        for k, v in self.actions[action_type]:
-            self.display.add_input_option(f'Input "{k}" --- {v}')
-            
-        self.display.set_input_prompt("What would you like to do?")
-        
-        return self.display.get_user_input()
-    
-    def play_hand(self, deck, hand_number):
-#         Get Player Action
-        player_action = self.get_input("hand")
 
-        if player_action == "q":
-#             Remove Player from the Game
-            pass
-        elif player_action == "m":
-#             Open Player Menu
-            self.display.open_menu()
-        elif player_action == "h":
-#             Hit on this Hand
-            self.hit(deck, hand_number)
-        elif player_action == "s":
-#             Stand on this Hand
-            self.stand(hand_number)
-        elif player_action == "a":
-#             Switch Ace Value
-            self.switch_ace(hand_number)
-        elif player_action == "t":
-#             Split Hand
-            self.split_hand(hand_number)
+    def set_hand(self, hand_index, hand_obj):
+        current_hands = self.get_hands()
+        new_hand = hand_obj
+        if hand_index < len(current_hands):
+            current_hands[hand_index] = new_hand
         else:
-#             Display Error Message
-            self.display.set_error("Input Not Recognized")
-            self.play_hand(deck, hand_number)
+            current_hands.append(new_hand)
+
+        self.set_hands(current_hands)
+
+    def get_hand(self, hand_index):
+        current_hands = self.get_hands()
+        return current_hands[hand_index]
+
+    def set_display(self, display_obj):
+        self.display = display_obj
+
+    def get_display(self):
+        return self.display
+
+    # Player Action Methods
+    # Bankroll Interaction
+    def add_to_bankroll(self, amount):
+        current_bankroll = self.get_bankroll()
+        current_bankroll += amount
+        self.set_bankroll(current_bankroll)
+        
+    def remove_from_bankroll(self, amount):
+        current_bankroll = self.get_bankroll
+        amount_to_remove = amount
+        if amount_to_remove > current_bankroll:
+            amount_to_remove = current_bankroll
+
+        current_bankroll -= amount_to_remove
+        self.set_bankroll(current_bankroll)
+
+        return amount_to_remove
+
+    # Hand Interaction
+    def bet(self, hand_index, amount):
+        selected_hand = self.get_hand(hand_index)
+        current_bet = self.remove_from_bankroll(amount)
+
+        selected_hand.set_bet(current_bet)
+        self.set_hand(hand_index, selected_hand)
+
+    def add_hand(self, hand_obj):
+        current_hands = self.get_hands()
+        current_hands.append(hand_obj)
+        self.set_hands(current_hands)
+
+    def new_hand(self, card_list=[]):
+        current_hands = self.get_hands()
+        new_hand = Hand()
+        hand_name = len(current_hands) + 1
+        new_hand.set_name(hand_name)
+        new_hand.set_cards(card_list)
+        new_hand.set_value()
+        
+        return new_hand
+
+    def split_hand(self, hand_obj):
+        current_hands = self.get_hands()
+        current_index = current_hands.index(hand_obj)
+        current_hand = self.get_hand(current_index)
+        first_card = current_hand.get_card(0)
+        second_card = current_hand.get_card(1)
+        current_bet = current_hand.get_bet()
+
+        if first_card.get_face() == second_card.get_face():
+            second_hand = self.new_hand([current_hand.give_card(second_card)])
+            self.add_hand(second_hand)
+            
+            second_index = len(self.get_hands()) - 1
+            self.bet(second_index, current_bet)
+
+            second_hand.set_split(True)
+            self.set_hand(second_index, second_hand)
+            current_hand.set_split(True)
+            self.set_hand(current_index, current_hand)
+
+        self.set_hands(current_hands)
+
+    def check_hand(self, hand_index):
+        current_hand = self.get_hand(hand_index)
+
+        # Make sure Hand is Updated
+        current_hand.set_natural()
+        current_hand.set_bust()
+
+        # Auto-Attempt Ace Switch if Bust
+        bust = current_hand.get_bust()
+        if bust == True:
+            current_cards = current_hand.get_cards()
+            for card in current_cards:
+                if (card.get_face() == "Ace") and (card.get_value() == 11):
+                    current_hand.ace_switch(card)
+            current_hand.set_bust()
+
+        self.set_hand(hand_index, current_hand)
+
+        return current_hand 
+        
+    def clear_hands(self):
+        cleared_hands = []
+        self.set_hands(cleared_hands)
+
+    # Display Methods
+    def column_format(self, column_width, text):
+        character_count = len(text)
+        space_remaining = column_width - character_count
+        whitespace = " " * space_remaining
+        formatted_string = text + whitespace
+
+        return formatted_string
+
+    def display_name(self):
+        current_display = self.get_display()
+        section_name = "Name"
+        content_list = []
+
+        entry = f'Player Name: {self.get_name()}'
+        content_list.append(entry)
+
+        current_display.set_section(section_name, content_list)
+        self.set_display(current_display)
+
+        return section_name
     
-        self.display.update("Player", self)
-                
+    def display_bankroll(self):
+        current_display = self.get_display()
+        section_name = "Bankroll"
+        content_list = []
+
+        entry = f'Current Bankroll: {self.get_bankroll()}'
+        content_list.append(entry)
+
+        current_display.set_section(section_name, content_list)
+        self.set_display(current_display)
+
+        return section_name   
+
+    def display_hands(self):
+        current_display = self.get_display()
+        current_hands = self.get_hands()
+        
+        # Display.show() prints in rows, so hand data needs to be formatted
+        # into columns with whitespace. This is SUPER inelegant...
+        row_content = []
+        column_width = 24
+
+        # Set up Column 1: The Labels
+        labels = ["Hand:", "Bet:", "Total:"]
+        label_column = []
+        for label in labels:
+            formatted_text = self.column_format(column_width, label)
+            label_column.append(formatted_text)
+
+        # Each Hand needs its own column
+        data_columns = []
+        for hand_index in range(len(current_hands)):
+            current_column = []
+            current_hand = self.check_hand(hand_index)
+
+            name = f'{current_hand.get_name()}'
+            current_column.append(name)
+
+            bet = f'{current_hand.get_bet()}'
+            current_column.append(bet)
+
+            total = f'{current_hand.get_value()}'
+            current_column.append(total)
+
+            card_count = 0
+            for card in current_hand.get_cards():
+                # Add Card Counter labels to the Label column if its not there yet
+                card_count += 1
+                card_label = f'Card {card_count}:'
+                formatted_label = self.column_format(column_width, card_label)
+                if formatted_label not in label_column:
+                    label_column.append(formatted_label)
+
+                # Add each Card Name and Value to the Hand column
+                card_text = f'{card.get_name()} | {card.get_value()}'
+                formatted_text = self.column_format(column_width, card_text)
+                current_column.append(formatted_text)
+            
+            data_columns.append(current_column)
+        
+        # Create Continuous Strings from Each Column
+        for row_index in range(len(label_column)):
+            row_list = []
+            blank_cell = " " * column_width
+            row_list.append(label_column[row_index])
+            for column in data_columns:
+                if row_index < len(column):
+                    row_list.append(column[row_index])
+                else:
+                    # Add Whitespace if there's no data
+                    row_list.append(blank_cell)
+            # Create a string and add it to row_content
+            row_string = "".join(row_list)
+            row_content.append(row_string)
+
+        content_order = []
+        # Create a new section for each row we created
+        for row in row_content:
+            section_name = row[0].rstrip()
+            current_display.set_section(section_name, row)
+            # List these Rows in ORDER for Display.set_order()
+            content_order.append(section_name)
+
+        self.set_display(current_display)
+
+        return content_order             
+
+    def display_options(self):
+        pass
+
+
+    def update_display(self):
+        current_display = self.get_display()
+        display_order = []
+
+        display_order.append(self.display_name())
+
+        display_order.append(self.display_bankroll())
+
+        for section in self.display_hands():
+            display_order.append(section)
+
+        # display_order.append(self.display_options())
+
+        current_display.set_order(display_order)
+        self.set_display(current_display)
+
+
+    def new_display(self):
+        new_display = Display()
+        new_display.set_title("Player Perspective")
+        new_display.set_subtitle("Your Turn")
+        new_display.set_border_pattern(["~"])
+        new_display.set_padding(1)
+        new_display.set_width(300)
+        new_display.set_height(300)
+        self.set_display(new_display)
+        self.update_display()
+        
+    # Turn Methods
+    def play_hand(self, hand_obj):
+        pass
+    
+    def play_turn(self):
+        pass
+        
+    def hit(self, hand_obj):
+        pass
+        
+    def stand(self, hand_obj):
+        pass

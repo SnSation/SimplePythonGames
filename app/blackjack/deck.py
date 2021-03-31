@@ -88,7 +88,7 @@ class Deck:
                     new_card = Card()
                     new_card.set_suit(suit)
                     new_card.set_face(face)
-                    new_card.set_name(f'{str(face).upper}_of_{str(suit).upper}')
+                    new_card.generate_name()
                     new_card.valuate()
                     self.add_card(new_card)
                     cards_built += 1

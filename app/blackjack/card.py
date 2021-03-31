@@ -41,3 +41,9 @@ class Card:
             self.value = self.face
         else:
             self.value = 10
+
+    def generate_name(self):
+        current_face = self.get_face()
+        current_suit = self.get_suit()
+        new_name = f'{current_face} of {current_suit}'
+        self.set_name(new_name)
